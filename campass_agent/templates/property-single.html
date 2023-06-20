@@ -1,4 +1,7 @@
 {%extends 'base.html'%}
+
+{% load custom_filters %}
+
 {%load static %}
 
 {%block content%}
@@ -84,9 +87,7 @@
                 </div>
                 <div class="summary-list">
                   <ul class="list">
-                    <p>
-                      {{distance_mover}}
-                    </p>
+                   
                     <li class="d-flex justify-content-between">
                       <strong>Property ID:</strong>
                       <span>{{ house.id }}</span>
@@ -165,9 +166,12 @@
         <div class="col-md-10 offset-md-1">
           <ul class="nav nav-pills-a nav-pills mb-3 section-t3" id="pills-tab"
             role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="pills-video-tab" data-bs-toggle="pill" href="#pills-video" role="tab" aria-controls="pills-video" aria-selected="true">Movers</a>
+            </li>
 
             <li class="nav-item">
-              <a class="nav-link active" id="pills-plans-tab"
+              <a class="nav-link " id="pills-plans-tab"
                 data-bs-toggle="pill" href="#pills-plans" role="tab"
                 aria-controls="pills-plans" aria-selected="false">Near By
                 facilities</a>
@@ -179,8 +183,33 @@
             </li>
           </ul>
           <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-video" role="tabpanel" aria-labelledby="pills-video-tab">
+             <div class="row">
+             {% for m in movers %}
+             <div class="col-md-4 mt-2">
+              <div class="card">
+                <div class="card-body">
+                  <h4>{{m.name}}</h4>
+                  <p>Distance  {{distance_mover}}</p>
+                  <p>Rate: Ksh {{m.rate}} per Kilomiter</p>
 
-            <div class="tab-pane fade show active" id="pills-plans"
+                
+                
+                  <p> Ksh. {{ distance_mover|multiply:m.rate }} 
+
+                  </p>
+                  <p>
+                    <a href="{% url 'mover'  m.id %}" class="btn btn-outline-success">View Mover</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+             {% endfor %}
+             </div>
+            </div>
+
+            <div class="tab-pane fade  " id="pills-plans"
               role="tabpanel" aria-labelledby="pills-plans-tab">
               <div class="row">
                 {% if distance <= 20000 %}
@@ -226,9 +255,9 @@
                 height="450"
                 frameborder="0"
                 style="border:0"
-                src="https://maps.google.com/maps?q={{house.latitude}},{{house.longitude}}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                src="https://maps.google.com/maps?q={{house.latitude}},{{house.longitude}}&t=&z=20&ie=UTF8&iwloc=&output=embed"
 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d0.0!2d{{ house.longitude }}!3d{{ house.latitude }}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDU5JzE4LjciTiAxNzjCsDEwJzI4LjAiRQ!5e0!3m2!1sen!2sus!4v1623830559936!5m2!1sen!2sus"
+          
                 allowfullscreen
                 aria-hidden="false"
                 tabindex="0"></iframe>
@@ -298,7 +327,8 @@
             </div>
             <div class="col-md-12 col-lg-4">
               <div class="property-contact">
-                <form class="form-a">
+                  <form action="" method="POST" class="form-a">
+                  
                   <div class="row">
                     <div class="col-md-12 mb-1">
                       <div class="form-group">

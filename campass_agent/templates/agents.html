@@ -15,8 +15,8 @@
         <div class="row">
           <div class="col-md-12 col-lg-8">
             <div class="title-single-box">
-              <h1 class="title-single">All Movers</h1>
-              <span class="color-text-a">Grid Movers View</span>
+              <h1 class="title-single">All Agents</h1>
+              <span class="color-text-a">Grid Agents View</span>
             </div>
           </div>
           <div class="col-md-12 col-lg-4">
@@ -26,7 +26,7 @@
                   <a href="#">Home</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                  Movers Grid
+                    Agents Grid
                 </li>
               </ol>
             </nav>
@@ -52,20 +52,20 @@
             </div>
           </div>
 
-          {% for mover in movers %}
+          {% for agent in agents %}
           <div class="col-md-4 mt-3">
            
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">
-                  {{mover.name}}
+                  {{agent.name}}
                 </h4>
                 <p>
-              Ksh  {{mover.rate}}  per Kilometer
+            
                 </p>
 
                 <p>
-                  <a href="{% url 'mover'  mover.id %}" class="btn btn-outline-success">View Mover</a>
+                  <a href="#" class="btn btn-outline-success">View agent</a>
                 </p>
               </div>
             </div>
