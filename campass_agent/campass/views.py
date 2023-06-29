@@ -7,7 +7,7 @@ from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 # Create your views here.
 from .models import Agent , House,Amenities,Mover,Facilities,Contact
-
+from .forms import ContactForm
 from geopy.geocoders import GoogleV3
 
 # geolocator = GoogleV3(api_key='AIzaSyCXEZty_KxWEvPpTx7X00dg4wgPYBhfyrY')
@@ -162,5 +162,14 @@ class MoverDetails(DetailView):
 
 def home(request):
     return render(request,'index.html')
+
+
+
+class ContactCreateView(CreateView):
+    model = Contact
+    form_class = ContactForm
+    template_name = 'contact.html'
+    success_url = '/contact/' 
+   
 
 
