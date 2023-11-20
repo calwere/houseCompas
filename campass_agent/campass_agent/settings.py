@@ -29,7 +29,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# GDAL_LIBRARY_PATH = 'C:\Program Files\QGIS 3.8\bin'
+# GEOS_LIBRARY_PATH = 'C:\Program Files\QGIS 3.8\bin'
 
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH', None)
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH', None)
 # Application definition
 
 INSTALLED_APPS = [
@@ -76,23 +80,23 @@ WSGI_APPLICATION = 'campass_agent.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'property_es9p', 
-#         'USER': 'postgresproperty',
-#         'PASSWORD': 'fmShWBj83ZKyWcZFXvR8OMnJhTOQLaul',
-#         'HOST': 'dpg-ci9dmf98g3ne2eicmuqg-a.oregon-postgres.render.com', 
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'castle_compass', 
+        'USER': 'postgres',
+        'PASSWORD': '98765432',
+        'HOST': 'localhost', 
+        'PORT': '5432',
+    }
+}
 
 
 # Password validation

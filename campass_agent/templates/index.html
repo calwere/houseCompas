@@ -15,7 +15,7 @@
     <div class="swiper-wrapper">
 		{% for house in houses %}
 			{% if forloop.counter < 5 %}
-      <div class="swiper-slide carousel-item-a intro-item bg-image" style="background-image: url('{% static 'assets/img/slide-1.jpg' %}')">
+      <div class="swiper-slide carousel-item-a intro-item bg-image" style="background-image: url('{{ house.image.url }}')">
         <div class="overlay overlay-a"></div>
         <div class="intro-content display-table">
           <div class="table-cell">
@@ -25,10 +25,10 @@
                   <div class="intro-body">
                     <p class="intro-title-top">
 						{{house.name}}
-                      <br> 78345
+                      <br>
                     </p>
                     <h1 class="intro-title mb-4 ">
-                      <span class="color-b">204 </span> 
+                      <span class="color-b"></span> 
                       {{house.name}}
                     </h1>
                     <p class="intro-subtitle intro-price">
