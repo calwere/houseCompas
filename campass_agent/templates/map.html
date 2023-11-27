@@ -1,0 +1,271 @@
+{%extends 'base.html'%}
+{%load static %}
+{%block content%}
+
+
+{% include 'partials/search.html' %}	
+{% include 'partials/header.html' %}
+
+<main id="main">
+    <!-- map.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map</title>
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map { height: 600px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <button onclick="calculateDistance()">Distance To Location</button>
+    <button onclick="calculateBestPath()">Find Best Path</button>
+    <button onclick="calculateMovingCharges()">Estimate Moving Charges</button>
+    <button onclick="FindNearbyFacilities()">Nearby Facilities</button>
+
+    <script>
+        var map = L.map('map', { center: [-1.20762, 36.88955], zoom: 16});
+        // Add tiles from OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // var userMarker;
+
+        // // Function to add markers to the map
+        // function addMarkers(data) {
+        //     data.forEach(function(item) {
+        //         L.marker([item.latitude, item.longitude]).addTo(map)
+        //             .bindPopup('<b>' + item.type + '</b><br>' + item.details);
+        //     });
+        // }
+
+        //    // Fetch house data from backend
+        //    fetch('/api/houses/')  // Update the endpoint URL according to your Django URL configuration
+        //     .then(response => response.json())
+        //     .then(houses => {
+        //         houses.forEach(function(house) {
+        //             L.marker([house.latitude, house.longitude]).addTo(map)
+        //                 .bindPopup(house.name);
+        //         });
+        //     })
+        //     .catch(error => console.error('Error fetching houses:', error));
+
+        // // Fetch facility data from backend
+        // fetch('/api/facilities/')  // Update the endpoint URL according to your Django URL configuration
+        //     .then(response => response.json())
+        //     .then(facilities => {
+        //         facilities.forEach(function(facilities) {
+        //             L.marker([facilities.latitude, facilities.longitude]).addTo(map)
+        //                 .bindPopup(facilities.name);
+        //         });
+        //     })
+        //     .catch(error => console.error('Error fetching facilities:', error));
+
+        // // Function to get user's current location
+        // function getUserLocation() {
+        //     if ('geolocation' in navigator) {
+        //         navigator.geolocation.getCurrentPosition(function(position) {
+        //             var userLatitude = position.coords.latitude;
+        //             var userLongitude = position.coords.longitude;
+
+        //             userMarker = L.marker([userLatitude, userLongitude]).addTo(map)
+        //                 .bindPopup('Your Location').openPopup();
+        //         }, function(error) {
+        //             console.error('Error getting user location:', error.message);
+        //         });
+        //     } else {
+        //         console.log('Geolocation is not supported.');
+        //     }
+        // }
+
+        // // Call getUserLocation function when the page loads
+        // window.onload = getUserLocation;
+
+        // // Function to calculate distance between two points
+        // function calculateDistance() {
+        //     if (!userMarker) {
+        //         alert('User location not available.');
+        //         return;
+        //     }
+
+        //     var userLatitude = userMarker.getLatLng().lat;
+        //     var userLongitude = userMarker.getLatLng().lng;
+
+        //     // Implement logic to calculate distance here...
+        //     // Use the user's location and the markers' locations
+        //     // Display the distances or perform any desired action
+        // }
+
+        // // Function to calculate and display the best path
+        // function calculateBestPath() {
+        //     if (!userMarker) {
+        //         alert('User location not available.');
+        //         return;
+        //     }
+
+        //     var userLatitude = userMarker.getLatLng().lat;
+        //     var userLongitude = userMarker.getLatLng().lng;
+
+        //     // Implement logic to find the best path here...
+        //     // Determine the closest markers based on distances
+        //     // Display the best path or perform any desired action
+        // }
+        var userMarker;
+
+        // Function to add markers to the map
+        function addMarkers(data) {
+            data.forEach(function(item) {
+                L.marker([item.latitude, item.longitude]).addTo(map)
+                    .bindPopup('<b>' + item.type + '</b><br>' + item.details);
+            });
+        }
+
+        // Fetch house data from backend
+        fetch('/api/houses/')  // Update the endpoint URL according to your Django URL configuration
+            .then(response => response.json())
+            .then(houses => {
+                houses.forEach(function(house) {
+                    L.marker([house.latitude, house.longitude]).addTo(map)
+                        .bindPopup(house.name);
+                });
+            })
+            .catch(error => console.error('Error fetching houses:', error));
+
+        // Fetch facility data from backend
+        fetch('/api/facilities/')  // Update the endpoint URL according to your Django URL configuration
+            .then(response => response.json())
+            .then(facilities => {
+                facilities.forEach(function(facilities) {
+                    L.marker([facilities.latitude, facilities.longitude]).addTo(map)
+                        .bindPopup(facilities.name);
+                });
+            })
+            .catch(error => console.error('Error fetching facilities:', error));
+
+        // Function to get user's current location
+        function getUserLocation() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var userLatitude = position.coords.latitude;
+                    var userLongitude = position.coords.longitude;
+
+                    userMarker = L.marker([userLatitude, userLongitude]).addTo(map)
+                        .bindPopup('Your Location').openPopup();
+                }, function(error) {
+                    console.error('Error getting user location:', error.message);
+                });
+            } else {
+                console.log('Geolocation is not supported.');
+            }
+        }
+
+        // Call getUserLocation function when the page loads
+        window.onload = getUserLocation;
+
+        // Function to calculate distance between two points
+        function calculateDistance() {
+            if (!userMarker) {
+                alert('User location not available.');
+                return;
+            }
+
+            var userLatitude = userMarker.getLatLng().lat;
+            var userLongitude = userMarker.getLatLng().lng;
+
+            // Example: For demonstration purposes, displaying distance as an alert
+            var distanceResult = " "; // Replace with actual distance calculation
+            alert(distanceResult);
+        }
+
+        // Function to calculate and display the best path
+        function calculateBestPath() {
+            if (!userMarker) {
+                alert('User location not available.');
+                return;
+            }
+
+            var userLatitude = userMarker.getLatLng().lat;
+            var userLongitude = userMarker.getLatLng().lng;
+
+            // Example: For demonstration purposes, drawing a line from user location to a house/facility
+            var houseLocation = { latitude: 51.5, longitude: -0.09 }; // Replace with actual location
+            var facilityLocation = { latitude: 51.6, longitude: -0.1 }; // Replace with actual location
+
+            drawPath(userLatitude, userLongitude, houseLocation.latitude, houseLocation.longitude);
+            drawPath(userLatitude, userLongitude, facilityLocation.latitude, facilityLocation.longitude);
+        }
+
+        // Function to draw a path on the map
+        function drawPath(startLat, startLng, endLat, endLng) {
+            var latlngs = [
+                [startLat, startLng],
+                [endLat, endLng]
+            ];
+
+            var polyline = L.polyline(latlngs, { color: 'red' }).addTo(map);
+            map.fitBounds(polyline.getBounds());
+        }
+
+
+
+// Customizing markers
+// var LeafIcon = L.Icon.extend({
+//     options: {
+//         iconSize: [38, 95],
+//         shadowSize: [50, 64],
+//         iconAnchor: [22, 94],
+//         shadowAnchor: [4, 62],
+//         popupAnchor: [-3, -76]
+//     }
+// });
+
+// var houseIconUrl = "{% static 'assets/img/housemarker.jpg' %}";
+// var houseIcon = new LeafIcon({
+//     iconUrl: houseIconUrl
+// });
+
+// var facilitiesIconUrl = "{% static 'assets/img/fmarker.png' %}";
+// var facilitiesIcon = new LeafIcon({
+//     iconUrl: facilitiesIconUrl
+// });
+
+// // Function to add markers to the map
+// function addMarkers(data, icon) {
+//     data.forEach(function(item) {
+//         L.marker([item.latitude, item.longitude], { icon: icon }).addTo(map)
+//             .bindPopup('<b>' + item.type + '</b><br>' + item.details);
+//     });
+// }
+
+// // Fetch house data from backend
+// fetch('/api/houses/')  // Update the endpoint URL according to your Django URL configuration
+//     .then(response => response.json())
+//     .then(houses => {
+//         addMarkers(houses, houseIcon);
+//     })
+//     .catch(error => console.error('Error fetching houses:', error));
+
+// // Fetch facility data from backend
+// fetch('/api/facilities/')  // Update the endpoint URL according to your Django URL configuration
+//     .then(response => response.json())
+//     .then(facilities => {
+//         addMarkers(facilities, facilitiesIcon);
+//     })
+//     .catch(error => console.error('Error fetching facilities:', error));
+
+//     </script>
+//     </body>
+// </html>
+
+
+</main>
+
+
+{% include 'partials/footer.html' %}		
+{%endblock content%}
